@@ -47,8 +47,8 @@ button{background:#38bdf8;border:none;color:#000;font-weight:bold;cursor:pointer
 // CONFIG
 const owner = "lesgofrfr"; // GitHub username
 const repo = "Upload"; // Repo name
-const token = "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"; // GitHub classic PAT
-const secretKey = "123beerYeekzylesgofrfr!?56"; // Owner secret for first login
+const token = "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"; // <-- INSERT YOUR TOKEN HERE
+const secretKey = "123beerYeekzylesgofrfr!?56"; // <-- INSERT YOUR OWNER PASSWORD HERE
 
 const status = document.getElementById("status");
 const filesDiv = document.getElementById("files");
@@ -60,7 +60,6 @@ const ownerPrompt = document.getElementById("ownerPrompt");
 // OWNER CHECK
 let role = localStorage.getItem("role"); // "owner" or "visitor"
 if(!role){
-  // show prompt
   ownerPrompt.style.display = "flex";
 }
 
@@ -93,11 +92,10 @@ function initPage(){
   if(role === "owner"){
     adminDiv.style.display = "block";
   }
-
   loadFiles();
 }
 
-// Load list of uploaded files from GitHub
+// LOAD FILES FROM GITHUB
 async function loadFiles(){
   filesDiv.innerHTML = "Loading files...";
   try{
@@ -109,19 +107,19 @@ async function loadFiles(){
         const a = document.createElement("a");
         a.href = item.download_url;
         a.textContent = item.name;
-        a.target = "_blank";
+        a.target = "_blank"; // each file opens in its own page/tab
         const div = document.createElement("div");
         div.className = "file-item";
         div.appendChild(a);
         filesDiv.appendChild(div);
       }
     });
-  }catch(e){
+  } catch(e){
     filesDiv.innerHTML = "Error loading files.";
   }
 }
 
-// Upload file function (owner only)
+// UPLOAD FILE (OWNER ONLY)
 uploadBtn.onclick = async () => {
   if(role !== "owner") return;
 
@@ -154,7 +152,7 @@ uploadBtn.onclick = async () => {
     if(res.ok){
       status.textContent = "File uploaded successfully!";
       fileInput.value = "";
-      loadFiles(); // refresh file list
+      loadFiles(); // refresh list
     } else {
       const err = await res.json();
       status.textContent = "Upload failed: " + (err.message || res.statusText);
@@ -164,11 +162,6 @@ uploadBtn.onclick = async () => {
   }
 };
 </script>
-</body>
-</html>    });
-    document.getElementById('copy-handle').addEventListener('click', function(){
-      copyText(document.getElementById('discord-handle').textContent, this);
-    });
-  </script>
+
 </body>
 </html>
