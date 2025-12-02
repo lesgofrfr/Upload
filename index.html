@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DM to Make File — @arfg.editz</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="card">
+      <h1>Want a file made?</h1>
+      <p class="lead">DM the website owner with your screenshots, photos, or files and I'll upload them here.</p>
+
+      <div class="contact">
+        <label>Discord User ID</label>
+        <div class="row">
+          <code id="discord-id">1323331952559919235</code>
+          <button id="copy-id">Copy</button>
+        </div>
+
+        <label>Discord Username</label>
+        <div class="row">
+          <code id="discord-handle">@arfg.editz</code>
+          <button id="copy-handle">Copy</button>
+        </div>
+
+        <a id="open-discord" class="btn" href="https://discord.com/users/1323331952559919235" target="_blank" rel="noopener">Open Discord Profile</a>
+      </div>
+
+      <p class="note">Only the site owner uploads files here. Please DM first.</p>
+    </div>
+
+    <footer class="footer">
+      <small>Made by @arfg.editz — Files uploaded by owner only.</small>
+    </footer>
+  </main>
+
+  <script>
+    function copyText(text, el) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(()=> {
+          el.textContent = 'Copied!';
+          setTimeout(()=> el.textContent = 'Copy', 1200);
+        }).catch(()=> {
+          alert('Unable to copy. Please copy manually: ' + text);
+        });
+      } else {
+        // fallback
+        const t = document.createElement('textarea');
+        document.body.appendChild(t);
+        t.value = text;
+        t.select();
+        try { document.execCommand('copy'); el.textContent='Copied!'; setTimeout(()=> el.textContent='Copy',1200); }
+        catch { alert('Copy failed — please copy manually: ' + text); }
+        document.body.removeChild(t);
+      }
+    }
+
+    document.getElementById('copy-id').addEventListener('click', function(){
+      copyText(document.getElementById('discord-id').textContent, this);
+    });
+    document.getElementById('copy-handle').addEventListener('click', function(){
+      copyText(document.getElementById('discord-handle').textContent, this);
+    });
+  </script>
+</body>
+</html>
