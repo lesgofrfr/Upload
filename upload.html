@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Upload — @arfg.editz</title>
+<style>
+body{
+  font-family:sans-serif;
+  padding:20px;
+  background:#0a0f1a;
+  color:white;
+  text-align:center;
+}
+input, button{
+  padding:10px;
+  margin:5px;
+  border-radius:6px;
+  font-size:16px;
+}
+input[type=file]{color:white;}
+button{
+  background:#38bdf8;
+  border:none;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+#status{
+  margin-top:15px;
+  color:#94a3b8;
+}
+</style>
+</head>
+<body>
+
+<h2>Admin File Upload</h2>
+<p>Only you can upload files.</p>
+
+<input type="file" id="fileInput"><br>
+<input type="password" id="secret" placeholder="Enter secret key"><br>
+<button id="uploadBtn">Upload File</button>
+
+<div id="status"></div>
+
+<script>
+const owner = "lesgofrfr"; // replace with your GitHub username
+const repo = "Upload"; // your repo name
+const token = "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"; // your GitHub classic PAT
+const secretKey = "123beerYeekzylesgofrfr!?56"; // set your secret password
+
+document.getElementById("uploadBtn").onclick = async () => {
+  const fileInput = document.getElementById("fileInput");
+  const password = document.getElementById("secret").value;
+  const status = document.getElementById("status");
+
+  if(password !== secretKey){
+    status.textContent = "Incorrect password!";
+    return;
+  }
+  if(fileInput.files.length === 0){
+    status.textContent = "Select a file first!";
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const arrayBuffer = await file.arrayBuffer();
+  const base64 = btoa(
+    new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+  );
+
+  const path = file.name;
+
+  try{
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`,{
+      method:"PUT",
+      headers:{
+        Authorization:`token ${token}`,
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        message: `Upload ${file.name}`,
+        content: base64
+      })
+    });
+
+    if(res.ok){
+      status.textContent = "File uploaded successfully!";
+      fileInput.value = "";
+    } else {
+      const err = await res.json();
+      status.textContent = "Upload failed: " + (err.message || res.statusText);
+    }
+  } catch(e){
+    status.textContent = "Error: " + e.message;
+  }
+};
+</script>
+
+</body>
+</html>
